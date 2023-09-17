@@ -12,14 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Logger;
@@ -36,47 +29,13 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
         FileConfiguration config = this.getConfig();
         this.saveDefaultConfig();
         this.getServer().getPluginManager().registerEvents(this, this);
-        log.info("[GlobalLocalChat] Starting up!");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "GlobalLocalChat Enabled! :]");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "플러그인 활성화");
     }
 
     public void onDisable() {
-        log.info("[GlobalLocalChat] Stopping!");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "GlobalLocalChat Disabled! :[");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "플러그인 비활성화");
     }
-
-    /*@EventHandler(priority = EventPriority.NORMAL)
-    public void playerChat(AsyncPlayerChatEvent e) {
-        e.setCancelled(true);
-        Player p = e.getPlayer();
-        String localChatPrefix = this.getConfig().getString("globalLocalChat.localChatPrefix");
-        int radius = this.getConfig().getInt("globalLocalChat.localChatRadius");
-
-        boolean noPlayersInRange = true;
-
-        for (Player recipient : e.getRecipients()) {
-            if (recipient != p && recipient.getWorld().equals(p.getWorld()) && recipient.getLocation().distance(p.getLocation()) <= radius) {
-                double distance = recipient.getLocation().distance(p.getLocation());
-                String formattedMessage = String.format(ChatColor.DARK_GREEN + "[" + Math.round(distance) + "m] " + ChatColor.RESET + "<%s> %s", p.getDisplayName(), e.getMessage());
-                recipient.sendMessage(formattedMessage);
-                noPlayersInRange = false;
-            }
-        }
-
-        if ((Integer)this.map.get(p.getName()) == 1 && p.hasPermission("globallocalchat.local")) {
-            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + " <%s> %s", p.getDisplayName(), e.getMessage());
-            p.sendMessage(localChatFormat);
-
-            if (noPlayersInRange) {
-                p.sendMessage(ChatColor.RED + "대화를 전송하지 못했습니다. 반경 " + radius + " 블록 내에 플레이어를 찾을 수 없습니다");
-                p.sendMessage(ChatColor.AQUA + "팁: /chatmode 명령어를 이용해 대화 모드를 전환할 수 있습니다");
-            }
-        } else {
-            String globalChatPrefix = this.getConfig().getString("globalLocalChat.globalChatPrefix");
-            String globalChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatPrefix) + "<%s> %s", p.getDisplayName(), e.getMessage());
-            Bukkit.broadcastMessage(globalChatFormat);
-        }
-    }*/
+    
     @EventHandler(priority = EventPriority.NORMAL)
     public void playerChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
