@@ -157,7 +157,7 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
 
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
         if (!(sender instanceof Player)) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[GlobalLocalChat] Sorry, but you cannot execute this command in the console! ;(");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "이 명령어는 플레이어만 사용할수있습니다");
             return true;
         } else {
             Player player = (Player)sender;
@@ -180,8 +180,8 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
 
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermission));
                 } else if (!(sender instanceof Player)) {
-                    log.info("[GlobalLocalChat] Sorry, but you cannot execute this command in the console! ;(");
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[GlobalLocalChat] Sorry, but you cannot execute this command in the console! ;(");
+                    log.info("이 명령어는 플레이어만 사용할수있습니다");
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "이 명령어는 플레이어만 사용할수있습니다");
                     return false;
                 }
             }
@@ -203,8 +203,8 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
 
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermission));
                 } else if (!(sender instanceof Player)) {
-                    log.info("[GlobalLocalChat] Sorry, but you cannot execute this command in the console! ;(");
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[GlobalLocalChat] Sorry, but you cannot execute this command in the console! ;(");
+                    log.info("이 명령어는 플레이어만 사용할수있습니다");
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "이 명령어는 플레이어만 사용할수있습니다");
                     return false;
                 }
             }
@@ -226,8 +226,8 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
 
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermission));
                 } else if (!(sender instanceof Player)) {
-                    log.info("[GlobalLocalChat] Sorry, but you cannot execute this command in the console! ;(");
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[GlobalLocalChat] Sorry, but you cannot execute this command in the console! ;(");
+                    log.info("이 명령어는 플레이어만 사용할수있습니다");
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "이 명령어는 플레이어만 사용할수있습니다");
                     return false;
                 }
             }
@@ -250,8 +250,8 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
 
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermission));
                 } else if (!(sender instanceof Player)) {
-                    log.info("[GlobalLocalChat] Sorry, but you cannot execute this command in the console! ;(");
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[GlobalLocalChat] Sorry, but you cannot execute this command in the console! ;(");
+                    log.info("이 명령어는 플레이어만 사용할수있습니다");
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "이 명령어는 플레이어만 사용할수있습니다");
                     return false;
                 }
             }
@@ -267,8 +267,8 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
 
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermission));
                 } else if (!(sender instanceof Player)) {
-                    log.info("[GlobalLocalChat] Sorry, but you cannot execute this command in the console! ;(");
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[GlobalLocalChat] Sorry, but you cannot execute this command in the console! ;(");
+                    log.info("이 명령어는 플레이어만 사용할수있습니다");
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "이 명령어는 플레이어만 사용할수있습니다");
                     return false;
                 }
             }
