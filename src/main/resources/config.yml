@@ -1,0 +1,58 @@
+pluginStuff:
+
+  # If a player doesn't have access to a certain command, then this is the message that will appear prior than.
+  noPermissionMessage: '&8[&6GlobalLocalChat&8] &cYou do not have permission!'
+
+  # When reloading the plugin, this is the message that will be displayed.
+  reloadMessage: '&8[&6GlobalLocalChat&8] &aConfiguration successfully reloaded!'
+
+globalLocalChat:
+
+  # Customize the message displayed when switching into Global Chat.
+  globalChat: 'You''ve entered &6Global &fChat!'
+
+  # When a player tries switching into Global Chat when they are already in it.
+  alreadyInGlobalChat: '&cYou are already in Global Chat!'
+
+  # When TRUE, players must have the permission used to switch to Global Chat (globallocalchat.global) in order to type in Global Chat.
+  permToTypeInGlobalChat: true
+
+  # Customize the message displayed when switching into Staff Chat.
+  staffChat: 'You''ve entered &cStaff &fChat!'
+
+  # When a player tries switching into Staff Chat when they are already in it.
+  alreadyInStaffChat: '&cYou are already in Staff Chat!'
+
+  # If TRUE, when a player, with the permission node globallocalchat.localspy, logins into the server, they will automatically be spying on all Local Chat messages
+  # To go out of Local Chat Spy, do /glcspy to turn off.
+  spyLocalOnLogin: true
+
+  # The message that appears when spying on Local Chat messages.
+  spyLocalOn: '&aNow spying on &6Local Chat &amessages!'
+
+  # The message that appears when no longer spying on Local Chat messages.
+  spyLocalOff: '&cNo longer spying on &6Local Chat &cmessages!'
+
+  # When a player types in Local Chat, this is the beginning prefix of their sentences with Local Chat Spy. Leave empty for no prefix.
+  spyLocalPrefix: '&8[&cLocal Spy&8]&7 '
+
+  # Customize the message displayed when switching into Local Chat.
+  localChat: 'You''ve entered &aLocal &fChat! Do &7/&6global &fto leave Local Chat!'
+
+  # When a player tries switching into Local Chat when they are already in it.
+  alreadyInLocalChat: '&cYou are already in Local Chat!'
+
+  # When TRUE, players must have the permission used to switch to Local Chat (globallocalchat.local) in order to SEE Local Chat.
+  permToSeeLocalChat: true
+
+  # How many blocks, in each direction, players can hear you from in Local Chat.
+  localChatRadius: 100
+
+  # When a player types in Local Chat, this is the beginning prefix of their sentences. Leave empty for no prefix.
+  localChatPrefix: '&8[&aLocal&8]&f '
+
+  # When a player types in Global Chat, this is the beginning prefix of their sentences. Leave empty for no prefix.
+  globalChatPrefix: '&8[&6Global&8]&f '
+
+  # When a player types in Staff Chat, this is the beginning prefix of their sentences. Leave empty for no prefix.
+  staffChatPrefix: '&8[&cStaff&8]&f '

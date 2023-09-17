@@ -1,0 +1,23 @@
+name: GlobalLocalChatPlugin
+version: Rolling
+main: site.revanilla.globallocalchatplugin.GlobalLocalChatPlugin
+api-version: '1.20'
+commands:
+  global:
+    description: Speak in global chat.
+    usage: /global
+    aliases: [g, all, ㅎ]
+  staffc:
+    description: Speak in staff chat.
+    usage: /staffc
+    aliases: [sc, ㄴㅊ, ㄴㅅㅁㄹㄹㅊ]
+  local:
+    description: Speak in local chat within the defined radius in the config.yml.
+    usage: /local
+    aliases: [l, r, ㅣ, ㄱ]
+  glcspy:
+    description: Spy on Local Chat messages.
+    usage: /glcspy
+  glcreload:
+    description: Reload the plugin's config.yml file.
+    usage: /glcreload
