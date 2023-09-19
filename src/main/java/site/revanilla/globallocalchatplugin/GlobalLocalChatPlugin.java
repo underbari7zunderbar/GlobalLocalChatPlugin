@@ -60,6 +60,7 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                         String formattedMessage = String.format(ChatColor.DARK_GREEN + "[" + Math.round(distance) + "m] " + ChatColor.RESET + "<%s> %s", p.getDisplayName(), e.getMessage());
                         recipient.sendMessage(formattedMessage);
                         noPlayersInRange = false;
+
                         if (noPlayersInRange) {
                             p.sendMessage(ChatColor.RED + "대화를 전송하지 못했습니다. 반경 " + radius + " 블록 내에 플레이어를 찾을 수 없습니다");
                             p.sendMessage(ChatColor.AQUA + "팁: /chatmode 명령어를 이용해 대화 모드를 전환할 수 있습니다");
@@ -304,12 +305,16 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                     if (prefixOrSuffix.equalsIgnoreCase("prefix")) {
                         // Prefix 설정
                         String text = ChatColor.translateAlternateColorCodes('&', args[2]);
-                        targetPlayer.setPlayerListName(text + targetPlayer.getName());
+                        String currentName = targetPlayer.getName();
+                        // Prefix를 플레이어 이름에 추가
+                        targetPlayer.setPlayerListName(text + currentName);
                         sender.sendMessage(targetPlayer.getName() + "님의 Prefix를 설정했습니다.");
                     } else if (prefixOrSuffix.equalsIgnoreCase("suffix")) {
                         // Suffix 설정
                         String text = ChatColor.translateAlternateColorCodes('&', args[2]);
-                        targetPlayer.setPlayerListName(targetPlayer.getName() + text);
+                        String currentName = targetPlayer.getName();
+                        // Suffix를 플레이어 이름에 추가
+                        targetPlayer.setPlayerListName(currentName + text);
                         sender.sendMessage(targetPlayer.getName() + "님의 Suffix를 설정했습니다.");
                     } else {
                         sender.sendMessage("올바른 prefix 또는 suffix를 지정하세요.");
