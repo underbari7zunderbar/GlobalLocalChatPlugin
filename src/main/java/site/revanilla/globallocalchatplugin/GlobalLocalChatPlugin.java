@@ -42,14 +42,14 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
         String globalChatFormat;
         String staffChatPrefix;
         if ((Integer)this.map.get(p.getName()) == 1) {
-            staffChatPrefix = this.getConfig().getString("globalLocalChat.localChatPrefix");
             String localChatPrefix = this.getConfig().getString("globalLocalChat.localChatPrefix");
             Boolean permToSeeLocalChat = this.getConfig().getBoolean("globalLocalChat.permToSeeLocalChat");
+            String prefix = String.format(ChatColor.translateAlternateColorCodes('&',"&7[ &a서버주인 &7]&f "));
             int radius = this.getConfig().getInt("globalLocalChat.localChatRadius");
             globalChatFormat = this.getConfig().getString("globalLocalChat.spyLocalPrefix");
-            boolean noPlayersInRange = true;
+            boolean noPlayersInRange;
             String localChatSpyFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatFormat) + e.getFormat(), p.getDisplayName(), e.getMessage());
-            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + "<%s> %s", p.getDisplayName(), e.getMessage());
+            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + prefix + "<%s> %s", p.getDisplayName(), e.getMessage());
             Iterator var9 = Bukkit.getOnlinePlayers().iterator();
             if (p.hasPermission("globallocalchat.local")) {
                 p.sendMessage(localChatFormat);
