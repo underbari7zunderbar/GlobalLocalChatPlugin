@@ -176,7 +176,6 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
 
                 if (args.length < 3) {
                     if (prefixOrSuffix.equalsIgnoreCase("prefix") || prefixOrSuffix.equalsIgnoreCase("suffix")) {
-                        targetPlayer.setPlayerListName(targetPlayer.getName());
                         sender.sendMessage(targetPlayer.getName() + "님의 " + prefixOrSuffix + "를 삭제했습니다.");
                         playerPrefixes.remove(targetPlayer.getName());
                     } else {
@@ -186,13 +185,11 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                     if (prefixOrSuffix.equalsIgnoreCase("prefix")) {
                         String prefix = ChatColor.translateAlternateColorCodes('&', args[2]);
                         String currentName = targetPlayer.getName();
-                        targetPlayer.setPlayerListName(prefix + currentName);
                         sender.sendMessage(targetPlayer.getName() + "님의 Prefix를 설정했습니다.");
                         playerPrefixes.put(targetPlayer.getName(), prefix);
                     } else if (prefixOrSuffix.equalsIgnoreCase("suffix")) {
                         String suffix = ChatColor.translateAlternateColorCodes('&', args[2]);
                         String currentName = targetPlayer.getName();
-                        targetPlayer.setPlayerListName(currentName + suffix);
                         sender.sendMessage(targetPlayer.getName() + "님의 Suffix를 설정했습니다.");
                         playerPrefixes.remove(targetPlayer.getName());
                     } else {
@@ -220,8 +217,8 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
             int radius = this.getConfig().getInt("globalLocalChat.localChatRadius");
             globalChatFormat = this.getConfig().getString("globalLocalChat.spyLocalPrefix");
             boolean noPlayersInRange;
-            String localChatSpyFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatFormat) + prefixsuffix + e.getFormat(), p.getDisplayName(), e.getMessage());
-            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) +  prefixsuffix + "<%s> %s", p.getDisplayName(), e.getMessage());
+            String localChatSpyFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatFormat) + e.getFormat(), p.getDisplayName(), e.getMessage());
+            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) +  ChatColor.GRAY + "[ " + prefixsuffix + ChatColor.GRAY + " ]" + ChatColor.RESET + " <%s> %s", p.getDisplayName(), e.getMessage());
             Iterator var9 = Bukkit.getOnlinePlayers().iterator();
             if (p.hasPermission("globallocalchat.local")) {
                 p.sendMessage(localChatFormat);
