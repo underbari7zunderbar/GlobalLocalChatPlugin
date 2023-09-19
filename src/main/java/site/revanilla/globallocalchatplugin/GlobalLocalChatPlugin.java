@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
+import com.destroystokyo.paper.profile.PlayerProfile;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -185,13 +185,13 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                     if (prefixOrSuffix.equalsIgnoreCase("prefix")) {
                         String prefix = ChatColor.translateAlternateColorCodes('&', args[2]);
                         String currentName = targetPlayer.getName();
-                        targetPlayer.setDisplayName(prefix + currentName);
+                        targetPlayer.setPlayerListName(prefix + currentName);
                         sender.sendMessage(targetPlayer.getName() + "님의 Prefix를 설정했습니다." + prefix);
                     } else if (prefixOrSuffix.equalsIgnoreCase("suffix")) {
                         String suffix = ChatColor.translateAlternateColorCodes('&', args[2]);
                         String currentName = targetPlayer.getName();
-                        targetPlayer.setDisplayName(currentName + suffix);
-                        sender.sendMessage(targetPlayer.getName() + "님의 Suffix를 설정했습니다." + suffix);
+                        targetPlayer.setPlayerListName(currentName + suffix);
+                        sender.sendMessage(targetPlayer.getName() + "님의 Suffix를 설정했습니다." + "&7[ " + suffix + " &7]");
                     } else {
                         sender.sendMessage("올바른 prefix 또는 suffix를 지정하세요.");
                     }
@@ -209,12 +209,11 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
         if ((Integer)this.map.get(p.getName()) == 1) {
             String localChatPrefix = this.getConfig().getString("globalLocalChat.localChatPrefix");
             Boolean permToSeeLocalChat = this.getConfig().getBoolean("globalLocalChat.permToSeeLocalChat");
-            //String prefixsuffix = String.format(ChatColor.translateAlternateColorCodes('&', prefix));
             int radius = this.getConfig().getInt("globalLocalChat.localChatRadius");
             globalChatFormat = this.getConfig().getString("globalLocalChat.spyLocalPrefix");
             boolean noPlayersInRange;
             String localChatSpyFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatFormat) + e.getFormat(), p.getDisplayName(), e.getMessage());
-            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + prefixsuffix + "<%s> %s", p.getDisplayName(), e.getMessage());
+            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + "<%s> %s", p.getDisplayName(), e.getMessage());
             Iterator var9 = Bukkit.getOnlinePlayers().iterator();
             if (p.hasPermission("globallocalchat.local")) {
                 p.sendMessage(localChatFormat);
