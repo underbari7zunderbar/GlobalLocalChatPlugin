@@ -211,6 +211,7 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
             Boolean permToSeeLocalChat = this.getConfig().getBoolean("globalLocalChat.permToSeeLocalChat");
             String prefix = playerPrefixes.get(p.getName());
             String prefixsuffix = "";
+            String localChatFormat;
             if (prefix != null) {
                 prefixsuffix = ChatColor.translateAlternateColorCodes('&', prefix);
             }
@@ -218,7 +219,11 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
             globalChatFormat = this.getConfig().getString("globalLocalChat.spyLocalPrefix");
             boolean noPlayersInRange;
             String localChatSpyFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatFormat) + e.getFormat(), p.getDisplayName(), e.getMessage());
-            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) +  ChatColor.GRAY + "[ " + prefixsuffix + ChatColor.GRAY + " ]" + ChatColor.RESET + " <%s> %s", p.getDisplayName(), e.getMessage());
+            if (prefixsuffix.isEmpty()) {
+                localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + " <%s> %s", p.getDisplayName(), e.getMessage());
+            } else {
+                localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + ChatColor.GRAY + "[ " + prefixsuffix + ChatColor.GRAY + " ]" + ChatColor.RESET + " <%s> %s", p.getDisplayName(), e.getMessage());
+            }
             Iterator var9 = Bukkit.getOnlinePlayers().iterator();
             if (p.hasPermission("globallocalchat.local")) {
                 p.sendMessage(localChatFormat);
