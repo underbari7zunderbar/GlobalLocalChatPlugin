@@ -35,124 +35,6 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
     public void onDisable() {
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "플러그인 비활성화");
     }
-    
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void playerChat(AsyncPlayerChatEvent e) {
-        Player p = e.getPlayer();
-        String globalChatFormat;
-        String staffChatPrefix;
-        if ((Integer)this.map.get(p.getName()) == 1) {
-            String localChatPrefix = this.getConfig().getString("globalLocalChat.localChatPrefix");
-            Boolean permToSeeLocalChat = this.getConfig().getBoolean("globalLocalChat.permToSeeLocalChat");
-            String prefix = String.format(ChatColor.translateAlternateColorCodes('&',"&7[ &a서버주인 &7]&f "));
-            int radius = this.getConfig().getInt("globalLocalChat.localChatRadius");
-            globalChatFormat = this.getConfig().getString("globalLocalChat.spyLocalPrefix");
-            boolean noPlayersInRange;
-            String localChatSpyFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatFormat) + e.getFormat(), p.getDisplayName(), e.getMessage());
-            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + prefix + "<%s> %s", p.getDisplayName(), e.getMessage());
-            Iterator var9 = Bukkit.getOnlinePlayers().iterator();
-            if (p.hasPermission("globallocalchat.local")) {
-                p.sendMessage(localChatFormat);
-
-                for (Player recipient : e.getRecipients()) {
-                    if (recipient != p && recipient.getWorld().equals(p.getWorld()) && recipient.getLocation().distance(p.getLocation()) <= radius) {
-                        double distance = recipient.getLocation().distance(p.getLocation());
-                        String formattedMessage = String.format(ChatColor.DARK_GREEN + "[" + Math.round(distance) + "m] " + ChatColor.RESET + "<%s> %s", p.getDisplayName(), e.getMessage());
-                        recipient.sendMessage(formattedMessage);
-                        noPlayersInRange = false;
-
-                        if (noPlayersInRange) {
-                            p.sendMessage(ChatColor.RED + "대화를 전송하지 못했습니다. 반경 " + radius + " 블록 내에 플레이어를 찾을 수 없습니다");
-                            p.sendMessage(ChatColor.AQUA + "팁: /chatmode 명령어를 이용해 대화 모드를 전환할 수 있습니다");
-                        }
-                    }
-                }
-
-                while (true) {
-                    while (var9.hasNext()) {
-                        Player p2 = (Player) var9.next();
-                        if (p2.getWorld().equals(p.getWorld()) && p2.getLocation().distance(p.getLocation()) <= (double) radius) {
-                            if (permToSeeLocalChat) {
-                                if (p2.hasPermission("globallocalchat.local") && p2 != p) {
-                                    p2.sendMessage(localChatFormat);
-                                }
-                            } else {
-                                if (p2 != p) {
-                                    p2.sendMessage(localChatFormat);
-                                }
-                            }
-                        } else if ((Integer) this.map2.get(p2.getName()) == 1 && p2.getPlayer() != p.getPlayer()) {
-                            e.setFormat(localChatSpyFormat);
-                            p2.sendRawMessage(e.getFormat());
-                            e.setFormat(localChatFormat);
-                        }
-                    }
-                    e.setCancelled(true);
-                    break;
-                }
-            } else {
-                this.map.put(p.getName(), 0);
-                String globalChatPrefix = this.getConfig().getString("globalLocalChat.globalChatPrefix");
-                globalChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatPrefix) + e.getFormat(), p.getDisplayName(), e.getMessage());
-                e.setFormat(globalChatFormat);
-            }
-        } else {
-            String noPermission;
-            String globalChatPrefix;
-            if ((Integer)this.map.get(p.getName()) == 2) {
-                staffChatPrefix = this.getConfig().getString("globalLocalChat.staffChatPrefix");
-                noPermission = String.format(ChatColor.translateAlternateColorCodes('&', staffChatPrefix) + e.getFormat(), p.getDisplayName(), e.getMessage());
-                if (p.hasPermission("globallocalchat.staff")) {
-                    e.setFormat(noPermission);
-                    Iterator var13 = Bukkit.getOnlinePlayers().iterator();
-
-                    while(var13.hasNext()) {
-                        Player p2 = (Player)var13.next();
-                        if (p2.hasPermission("globallocalchat.staff")) {
-                            p2.sendRawMessage(e.getFormat());
-                        }
-                    }
-
-                    e.setCancelled(true);
-                } else {
-                    this.map.put(p.getName(), 0);
-                    globalChatPrefix = this.getConfig().getString("globalLocalChat.globalChatPrefix");
-                    globalChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatPrefix) + e.getFormat(), p.getDisplayName(), e.getMessage());
-                    e.setFormat(globalChatFormat);
-                }
-            } else {
-                Boolean permToTypeInGlobalChat = this.getConfig().getBoolean("globalLocalChat.permToTypeInGlobalChat");
-                noPermission = this.getConfig().getString("pluginStuff.noPermissionMessage");
-                globalChatPrefix = this.getConfig().getString("globalLocalChat.globalChatPrefix");
-                globalChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatPrefix) + e.getFormat(), p.getDisplayName(), e.getMessage());
-                if (permToTypeInGlobalChat) {
-                    if (e.getPlayer().hasPermission("globallocalchat.global")) {
-                        e.setFormat(globalChatFormat);
-                    } else {
-                        e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', noPermission));
-                        e.setCancelled(true);
-                    }
-                } else {
-                    e.setFormat(globalChatFormat);
-                }
-            }
-            }
-
-        }
-
-        @EventHandler
-        public void onPlayerJoin(PlayerJoinEvent e) {
-            Player p = e.getPlayer();
-            this.map.put(p.getName(), 1);
-            this.map2.put(p.getName(), 0);
-            String spyLocalOn = this.getConfig().getString("globalLocalChat.spyLocalOn");
-            Boolean spyLocalOnLogin = this.getConfig().getBoolean("globalLocalChat.spyLocalOnLogin");
-            if (spyLocalOnLogin && p.hasPermission("globallocalchat.localspy")) {
-                this.map2.put(p.getName(), 1);
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&', spyLocalOn));
-            }
-
-        }
 
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
         if (!(sender instanceof Player)) {
@@ -324,4 +206,123 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
             return true;
         }
     }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void playerChat(AsyncPlayerChatEvent e) {
+        Player p = e.getPlayer();
+        String globalChatFormat;
+        String staffChatPrefix;
+        if ((Integer)this.map.get(p.getName()) == 1) {
+            String localChatPrefix = this.getConfig().getString("globalLocalChat.localChatPrefix");
+            Boolean permToSeeLocalChat = this.getConfig().getBoolean("globalLocalChat.permToSeeLocalChat");
+            String prefix = String.format(ChatColor.translateAlternateColorCodes('&',"&7[ &a서버주인 &7]&f "));
+            int radius = this.getConfig().getInt("globalLocalChat.localChatRadius");
+            globalChatFormat = this.getConfig().getString("globalLocalChat.spyLocalPrefix");
+            boolean noPlayersInRange;
+            String localChatSpyFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatFormat) + e.getFormat(), p.getDisplayName(), e.getMessage());
+            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + prefix + "<%s> %s", p.getDisplayName(), e.getMessage());
+            Iterator var9 = Bukkit.getOnlinePlayers().iterator();
+            if (p.hasPermission("globallocalchat.local")) {
+                p.sendMessage(localChatFormat);
+
+                for (Player recipient : e.getRecipients()) {
+                    if (recipient != p && recipient.getWorld().equals(p.getWorld()) && recipient.getLocation().distance(p.getLocation()) <= radius) {
+                        double distance = recipient.getLocation().distance(p.getLocation());
+                        String formattedMessage = String.format(ChatColor.DARK_GREEN + "[" + Math.round(distance) + "m] " + ChatColor.RESET + "<%s> %s", p.getDisplayName(), e.getMessage());
+                        recipient.sendMessage(formattedMessage);
+                        noPlayersInRange = false;
+
+                        if (noPlayersInRange) {
+                            p.sendMessage(ChatColor.RED + "대화를 전송하지 못했습니다. 반경 " + radius + " 블록 내에 플레이어를 찾을 수 없습니다");
+                            p.sendMessage(ChatColor.AQUA + "팁: /chatmode 명령어를 이용해 대화 모드를 전환할 수 있습니다");
+                        }
+                    }
+                }
+
+                while (true) {
+                    while (var9.hasNext()) {
+                        Player p2 = (Player) var9.next();
+                        if (p2.getWorld().equals(p.getWorld()) && p2.getLocation().distance(p.getLocation()) <= (double) radius) {
+                            if (permToSeeLocalChat) {
+                                if (p2.hasPermission("globallocalchat.local") && p2 != p) {
+                                    p2.sendMessage(localChatFormat);
+                                }
+                            } else {
+                                if (p2 != p) {
+                                    p2.sendMessage(localChatFormat);
+                                }
+                            }
+                        } else if ((Integer) this.map2.get(p2.getName()) == 1 && p2.getPlayer() != p.getPlayer()) {
+                            e.setFormat(localChatSpyFormat);
+                            p2.sendRawMessage(e.getFormat());
+                            e.setFormat(localChatFormat);
+                        }
+                    }
+                    e.setCancelled(true);
+                    break;
+                }
+            } else {
+                this.map.put(p.getName(), 0);
+                String globalChatPrefix = this.getConfig().getString("globalLocalChat.globalChatPrefix");
+                globalChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatPrefix) + e.getFormat(), p.getDisplayName(), e.getMessage());
+                e.setFormat(globalChatFormat);
+            }
+        } else {
+            String noPermission;
+            String globalChatPrefix;
+            if ((Integer)this.map.get(p.getName()) == 2) {
+                staffChatPrefix = this.getConfig().getString("globalLocalChat.staffChatPrefix");
+                noPermission = String.format(ChatColor.translateAlternateColorCodes('&', staffChatPrefix) + e.getFormat(), p.getDisplayName(), e.getMessage());
+                if (p.hasPermission("globallocalchat.staff")) {
+                    e.setFormat(noPermission);
+                    Iterator var13 = Bukkit.getOnlinePlayers().iterator();
+
+                    while(var13.hasNext()) {
+                        Player p2 = (Player)var13.next();
+                        if (p2.hasPermission("globallocalchat.staff")) {
+                            p2.sendRawMessage(e.getFormat());
+                        }
+                    }
+
+                    e.setCancelled(true);
+                } else {
+                    this.map.put(p.getName(), 0);
+                    globalChatPrefix = this.getConfig().getString("globalLocalChat.globalChatPrefix");
+                    globalChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatPrefix) + e.getFormat(), p.getDisplayName(), e.getMessage());
+                    e.setFormat(globalChatFormat);
+                }
+            } else {
+                Boolean permToTypeInGlobalChat = this.getConfig().getBoolean("globalLocalChat.permToTypeInGlobalChat");
+                noPermission = this.getConfig().getString("pluginStuff.noPermissionMessage");
+                globalChatPrefix = this.getConfig().getString("globalLocalChat.globalChatPrefix");
+                globalChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatPrefix) + e.getFormat(), p.getDisplayName(), e.getMessage());
+                if (permToTypeInGlobalChat) {
+                    if (e.getPlayer().hasPermission("globallocalchat.global")) {
+                        e.setFormat(globalChatFormat);
+                    } else {
+                        e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', noPermission));
+                        e.setCancelled(true);
+                    }
+                } else {
+                    e.setFormat(globalChatFormat);
+                }
+            }
+            }
+
+        }
+
+        @EventHandler
+        public void onPlayerJoin(PlayerJoinEvent e) {
+            Player p = e.getPlayer();
+            this.map.put(p.getName(), 1);
+            this.map2.put(p.getName(), 0);
+            String spyLocalOn = this.getConfig().getString("globalLocalChat.spyLocalOn");
+            Boolean spyLocalOnLogin = this.getConfig().getBoolean("globalLocalChat.spyLocalOnLogin");
+            if (spyLocalOnLogin && p.hasPermission("globallocalchat.localspy")) {
+                this.map2.put(p.getName(), 1);
+                p.sendMessage(ChatColor.translateAlternateColorCodes('&', spyLocalOn));
+            }
+
+        }
+
 }
