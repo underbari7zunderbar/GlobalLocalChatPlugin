@@ -161,7 +161,6 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                     return true;
                 }
 
-                // 플레이어 입력 확인
                 Player targetPlayer = getServer().getPlayer(args[0]);
                 if (targetPlayer == null) {
                     sender.sendMessage("플레이어를 찾을 수 없습니다.");
@@ -176,35 +175,25 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                 String prefixOrSuffix = args[1];
 
                 if (args.length < 3) {
-                    // 3번째 인수가 없으면 삭제 작업 수행
                     if (prefixOrSuffix.equalsIgnoreCase("prefix") || prefixOrSuffix.equalsIgnoreCase("suffix")) {
-                        // 해당 플레이어의 prefix 또는 suffix 삭제
                         targetPlayer.setPlayerListName(targetPlayer.getName());
                         sender.sendMessage(targetPlayer.getName() + "님의 " + prefixOrSuffix + "를 삭제했습니다.");
-                        // Prefix를 저장한 HashMap에서 제거
                         playerPrefixes.remove(targetPlayer.getName());
                     } else {
                         sender.sendMessage("올바른 prefix 또는 suffix를 지정하세요.");
                     }
                 } else {
-                    // 3번째 인수가 있으면 설정 작업 수행
                     if (prefixOrSuffix.equalsIgnoreCase("prefix")) {
-                        // Prefix 설정
                         String prefix = ChatColor.translateAlternateColorCodes('&', args[2]);
                         String currentName = targetPlayer.getName();
-                        // Prefix를 플레이어 이름에 추가
                         targetPlayer.setPlayerListName(prefix + currentName);
                         sender.sendMessage(targetPlayer.getName() + "님의 Prefix를 설정했습니다.");
-                        // Prefix를 저장한 HashMap에 저장
                         playerPrefixes.put(targetPlayer.getName(), prefix);
                     } else if (prefixOrSuffix.equalsIgnoreCase("suffix")) {
-                        // Suffix 설정
                         String suffix = ChatColor.translateAlternateColorCodes('&', args[2]);
                         String currentName = targetPlayer.getName();
-                        // Suffix를 플레이어 이름에 추가
                         targetPlayer.setPlayerListName(currentName + suffix);
                         sender.sendMessage(targetPlayer.getName() + "님의 Suffix를 설정했습니다.");
-                        // Prefix를 저장한 HashMap에서 제거
                         playerPrefixes.remove(targetPlayer.getName());
                     } else {
                         sender.sendMessage("올바른 prefix 또는 suffix를 지정하세요.");
@@ -231,8 +220,8 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
             int radius = this.getConfig().getInt("globalLocalChat.localChatRadius");
             globalChatFormat = this.getConfig().getString("globalLocalChat.spyLocalPrefix");
             boolean noPlayersInRange;
-            String localChatSpyFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatFormat) + e.getFormat(), prefixsuffix + p.getDisplayName(), e.getMessage());
-            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + "<%s> %s", prefixsuffix + p.getDisplayName(), e.getMessage());
+            String localChatSpyFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatFormat) + prefixsuffix + e.getFormat(), p.getDisplayName(), e.getMessage());
+            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) +  prefixsuffix + "<%s> %s", p.getDisplayName(), e.getMessage());
             Iterator var9 = Bukkit.getOnlinePlayers().iterator();
             if (p.hasPermission("globallocalchat.local")) {
                 p.sendMessage(localChatFormat);
