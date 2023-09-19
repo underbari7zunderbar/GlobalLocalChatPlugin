@@ -223,11 +223,16 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
         if ((Integer)this.map.get(p.getName()) == 1) {
             String localChatPrefix = this.getConfig().getString("globalLocalChat.localChatPrefix");
             Boolean permToSeeLocalChat = this.getConfig().getBoolean("globalLocalChat.permToSeeLocalChat");
+            String prefix = playerPrefixes.get(p.getName());
+            String prefixsuffix = "";
+            if (prefix != null) {
+                prefixsuffix = ChatColor.translateAlternateColorCodes('&', prefix);
+            }
             int radius = this.getConfig().getInt("globalLocalChat.localChatRadius");
             globalChatFormat = this.getConfig().getString("globalLocalChat.spyLocalPrefix");
             boolean noPlayersInRange;
-            String localChatSpyFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatFormat) + e.getFormat(), p.getDisplayName(), e.getMessage());
-            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + "<%s> %s", p.getDisplayName(), e.getMessage());
+            String localChatSpyFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatFormat) + e.getFormat(), prefixsuffix + p.getDisplayName(), e.getMessage());
+            String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + "<%s> %s", prefixsuffix + p.getDisplayName(), e.getMessage());
             Iterator var9 = Bukkit.getOnlinePlayers().iterator();
             if (p.hasPermission("globallocalchat.local")) {
                 p.sendMessage(localChatFormat);
