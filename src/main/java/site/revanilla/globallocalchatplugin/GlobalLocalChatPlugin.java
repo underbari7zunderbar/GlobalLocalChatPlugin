@@ -22,7 +22,6 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
     public static Logger log = Logger.getLogger("Minecraft");
     HashMap<String, Integer> map = new HashMap();
     HashMap<String, Integer> map2 = new HashMap();
-    public static String prefixsuffix = "";
 
     public GlobalLocalChatPlugin() {
     }
@@ -186,12 +185,12 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                     if (prefixOrSuffix.equalsIgnoreCase("prefix")) {
                         String prefix = ChatColor.translateAlternateColorCodes('&', args[2]);
                         String currentName = targetPlayer.getName();
-                        targetPlayer.setPlayerListName(prefix + currentName);
+                        targetPlayer.setDisplayName(prefix + currentName);
                         sender.sendMessage(targetPlayer.getName() + "님의 Prefix를 설정했습니다." + prefix);
                     } else if (prefixOrSuffix.equalsIgnoreCase("suffix")) {
                         String suffix = ChatColor.translateAlternateColorCodes('&', args[2]);
                         String currentName = targetPlayer.getName();
-                        targetPlayer.setPlayerListName(currentName + suffix);
+                        targetPlayer.setDisplayName(currentName + suffix);
                         sender.sendMessage(targetPlayer.getName() + "님의 Suffix를 설정했습니다." + suffix);
                     } else {
                         sender.sendMessage("올바른 prefix 또는 suffix를 지정하세요.");
