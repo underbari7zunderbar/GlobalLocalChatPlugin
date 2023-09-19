@@ -217,8 +217,7 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
         if ((Integer)this.map.get(p.getName()) == 1) {
             String localChatPrefix = this.getConfig().getString("globalLocalChat.localChatPrefix");
             Boolean permToSeeLocalChat = this.getConfig().getBoolean("globalLocalChat.permToSeeLocalChat");
-            //String prefix = String.format(ChatColor.translateAlternateColorCodes('&',"&7[ &a서버주인 &7]&f "));
-            String prefixsuffix = String.format(ChatColor.translateAlternateColorCodes('&', prefix));
+            //String prefixsuffix = String.format(ChatColor.translateAlternateColorCodes('&', prefix));
             int radius = this.getConfig().getInt("globalLocalChat.localChatRadius");
             globalChatFormat = this.getConfig().getString("globalLocalChat.spyLocalPrefix");
             boolean noPlayersInRange;
