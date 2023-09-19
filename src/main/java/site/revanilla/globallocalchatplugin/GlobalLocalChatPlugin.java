@@ -231,7 +231,12 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                 for (Player recipient : e.getRecipients()) {
                     if (recipient != p && recipient.getWorld().equals(p.getWorld()) && recipient.getLocation().distance(p.getLocation()) <= radius) {
                         double distance = recipient.getLocation().distance(p.getLocation());
-                        String formattedMessage = String.format(ChatColor.DARK_GREEN + "[" + Math.round(distance) + "m] " + ChatColor.RESET + "<%s> %s", p.getDisplayName(), e.getMessage());
+                        String formattedMessage;
+                        if (prefixsuffix.isEmpty()) {
+                            formattedMessage = String.format(ChatColor.DARK_GREEN + "[" + Math.round(distance) + "m] " + ChatColor.RESET + "<%s> %s", p.getDisplayName(), e.getMessage());
+                        } else {
+                            formattedMessage = String.format(ChatColor.DARK_GREEN + "[" + Math.round(distance) + "m] " + ChatColor.RESET + "<%s> %s" , p.getDisplayName(), e.getMessage());
+                        }
                         recipient.sendMessage(formattedMessage);
                         noPlayersInRange = false;
 
