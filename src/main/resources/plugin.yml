@@ -21,3 +21,6 @@ commands:
   glcreload:
     description: Reload the plugin's config.yml file.
     usage: /glcreload
+  glcl:
+    description: Set Prefix of Player
+    usage: /glcl

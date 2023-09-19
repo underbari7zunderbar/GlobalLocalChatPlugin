@@ -49,7 +49,6 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
             globalChatFormat = this.getConfig().getString("globalLocalChat.spyLocalPrefix");
             boolean noPlayersInRange = true;
             String localChatSpyFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatFormat) + e.getFormat(), p.getDisplayName(), e.getMessage());
-            String staffChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', staffChatPrefix) + e.getFormat(), p.getDisplayName(), e.getMessage());
             String localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + "<%s> %s", p.getDisplayName(), e.getMessage());
             Iterator var9 = Bukkit.getOnlinePlayers().iterator();
             if (p.hasPermission("globallocalchat.local")) {
@@ -64,7 +63,6 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                         if (noPlayersInRange) {
                             p.sendMessage(ChatColor.RED + "대화를 전송하지 못했습니다. 반경 " + radius + " 블록 내에 플레이어를 찾을 수 없습니다");
                             p.sendMessage(ChatColor.AQUA + "팁: /chatmode 명령어를 이용해 대화 모드를 전환할 수 있습니다");
-                            return;
                         }
                     }
                 }
@@ -272,7 +270,52 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                     return false;
                 }
             }
+            if (commandLabel.equalsIgnoreCase("glcl")) {
+                if (args.length < 1) {
+                    sender.sendMessage("사용법: /glcl <플레이어> [prefix/suffix] <텍스트>");
+                    return true;
+                }
 
+                // 플레이어 입력 확인
+                Player targetPlayer = getServer().getPlayer(args[0]);
+                if (targetPlayer == null) {
+                    sender.sendMessage("플레이어를 찾을 수 없습니다.");
+                    return true;
+                }
+
+                if (args.length < 2) {
+                    sender.sendMessage("사용법: /glcl <플레이어> [prefix/suffix] <텍스트>");
+                    return true;
+                }
+
+                String prefixOrSuffix = args[1];
+
+                if (args.length < 3) {
+                    // 3번째 인수가 없으면 삭제 작업 수행
+                    if (prefixOrSuffix.equalsIgnoreCase("prefix") || prefixOrSuffix.equalsIgnoreCase("suffix")) {
+                        // 해당 플레이어의 prefix 또는 suffix 삭제
+                        targetPlayer.setPlayerListName(targetPlayer.getName());
+                        sender.sendMessage(targetPlayer.getName() + "님의 " + prefixOrSuffix + "를 삭제했습니다.");
+                    } else {
+                        sender.sendMessage("올바른 prefix 또는 suffix를 지정하세요.");
+                    }
+                } else {
+                    // 3번째 인수가 있으면 설정 작업 수행
+                    if (prefixOrSuffix.equalsIgnoreCase("prefix")) {
+                        // Prefix 설정
+                        String text = ChatColor.translateAlternateColorCodes('&', args[2]);
+                        targetPlayer.setPlayerListName(text + targetPlayer.getName());
+                        sender.sendMessage(targetPlayer.getName() + "님의 Prefix를 설정했습니다.");
+                    } else if (prefixOrSuffix.equalsIgnoreCase("suffix")) {
+                        // Suffix 설정
+                        String text = ChatColor.translateAlternateColorCodes('&', args[2]);
+                        targetPlayer.setPlayerListName(targetPlayer.getName() + text);
+                        sender.sendMessage(targetPlayer.getName() + "님의 Suffix를 설정했습니다.");
+                    } else {
+                        sender.sendMessage("올바른 prefix 또는 suffix를 지정하세요.");
+                    }
+                }
+            }
             return true;
         }
     }
