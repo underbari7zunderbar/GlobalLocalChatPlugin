@@ -21,28 +21,24 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
     public static Logger log = Logger.getLogger("Minecraft");
     HashMap<String, Integer> map = new HashMap();
     HashMap<String, Integer> map2 = new HashMap();
-    // 변경: playerPrefixes 해시맵을 PlayerDataHandler로 대체
-    private PlayerDataHandler playerDataHandler;
+    private HashMap<String, String> playerPrefixes = new HashMap();
+    private HashMap<String, String> playerSuffixes = new HashMap();
+    PlayerDataHandler playerDataHandler;
 
     public GlobalLocalChatPlugin() {
     }
 
     public void onEnable() {
+        this.playerDataHandler = new PlayerDataHandler(this);
+        this.playerDataHandler.loadPlayerData();
         FileConfiguration config = this.getConfig();
         this.saveDefaultConfig();
         this.getServer().getPluginManager().registerEvents(this, this);
-
-        // 변경: PlayerDataHandler 초기화 및 데이터 로드
-        playerDataHandler = new PlayerDataHandler(this);
-        playerDataHandler.loadPlayerData();
-
         Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "플러그인 활성화");
     }
 
     public void onDisable() {
-        // 변경: PlayerDataHandler를 통해 데이터 저장
-        playerDataHandler.savePlayerData();
-
+        this.playerDataHandler.savePlayerData();
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "플러그인 비활성화");
     }
 
@@ -51,13 +47,13 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "이 명령어는 플레이어만 사용할수있습니다");
             return true;
         } else {
-            Player player = (Player) sender;
+            Player player = (Player)sender;
             String noPermission = this.getConfig().getString("pluginStuff.noPermissionMessage");
             String spyLocalOff;
             if (commandLabel.equalsIgnoreCase("local") || commandLabel.equalsIgnoreCase("l")) {
                 if (sender instanceof Player) {
                     if (player.hasPermission("globallocalchat.local")) {
-                        if ((Integer) this.map.get(player.getName()) != 1) {
+                        if ((Integer)this.map.get(player.getName()) != 1) {
                             spyLocalOff = this.getConfig().getString("globalLocalChat.localChat");
                             this.map.put(player.getName(), 1);
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', spyLocalOff));
@@ -80,7 +76,7 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
             if (commandLabel.equalsIgnoreCase("global") || commandLabel.equalsIgnoreCase("g")) {
                 if (sender instanceof Player) {
                     if (player.hasPermission("globallocalchat.global")) {
-                        if ((Integer) this.map.get(player.getName()) != 0) {
+                        if ((Integer)this.map.get(player.getName()) != 0) {
                             spyLocalOff = this.getConfig().getString("globalLocalChat.globalChat");
                             this.map.put(player.getName(), 0);
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', spyLocalOff));
@@ -103,7 +99,7 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
             if (commandLabel.equalsIgnoreCase("staffc") || commandLabel.equalsIgnoreCase("sc")) {
                 if (sender instanceof Player) {
                     if (player.hasPermission("globallocalchat.staff")) {
-                        if ((Integer) this.map.get(player.getName()) != 2) {
+                        if ((Integer)this.map.get(player.getName()) != 2) {
                             spyLocalOff = this.getConfig().getString("globalLocalChat.staffChat");
                             this.map.put(player.getName(), 2);
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', spyLocalOff));
@@ -126,11 +122,11 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
             if (commandLabel.equalsIgnoreCase("glcspy")) {
                 if (sender instanceof Player) {
                     if (player.hasPermission("globallocalchat.localspy")) {
-                        if ((Integer) this.map2.get(player.getName()) == 0) {
+                        if ((Integer)this.map2.get(player.getName()) == 0) {
                             spyLocalOff = this.getConfig().getString("globalLocalChat.spyLocalOn");
                             this.map2.put(player.getName(), 1);
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', spyLocalOff));
-                        } else if ((Integer) this.map2.get(player.getName()) == 1) {
+                        } else if ((Integer)this.map2.get(player.getName()) == 1) {
                             spyLocalOff = this.getConfig().getString("globalLocalChat.spyLocalOff");
                             this.map2.put(player.getName(), 0);
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', spyLocalOff));
@@ -163,13 +159,14 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                     return false;
                 }
             }
+
             if (commandLabel.equalsIgnoreCase("glcl")) {
                 if (args.length < 1) {
                     sender.sendMessage("사용법: /glcl <플레이어> [prefix/suffix] <텍스트>");
                     return true;
                 }
 
-                Player targetPlayer = getServer().getPlayer(args[0]);
+                Player targetPlayer = this.getServer().getPlayer(args[0]);
                 if (targetPlayer == null) {
                     sender.sendMessage("플레이어를 찾을 수 없습니다.");
                     return true;
@@ -181,83 +178,90 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                 }
 
                 String prefixOrSuffix = args[1];
-
                 if (args.length < 3) {
-                    if (prefixOrSuffix.equalsIgnoreCase("prefix") || prefixOrSuffix.equalsIgnoreCase("suffix")) {
-                        sender.sendMessage(targetPlayer.getName() + "님의 " + prefixOrSuffix + "를 삭제했습니다.");
-
-                        // 변경: PlayerDataHandler를 통해 playerPrefixes 업데이트
-                        playerDataHandler.getPlayerPrefixes().remove(targetPlayer.getName());
-                    } else {
+                    if (!prefixOrSuffix.equalsIgnoreCase("prefix") && !prefixOrSuffix.equalsIgnoreCase("suffix")) {
                         sender.sendMessage("올바른 prefix 또는 suffix를 지정하세요.");
+                    } else {
+                        sender.sendMessage(targetPlayer.getName() + "님의 " + prefixOrSuffix + "를 삭제했습니다.");
+                        if (prefixOrSuffix.equalsIgnoreCase("prefix")) {
+                            this.playerPrefixes.remove(targetPlayer.getName());
+                        } else if (prefixOrSuffix.equalsIgnoreCase("suffix")) {
+                            this.playerSuffixes.remove(targetPlayer.getName());
+                        }
                     }
                 } else {
+                    String text = args[2];
+                    String currentName;
                     if (prefixOrSuffix.equalsIgnoreCase("prefix")) {
-                        String prefix = ChatColor.translateAlternateColorCodes('&', args[2]);
-                        String currentName = targetPlayer.getName();
+                        text = ChatColor.translateAlternateColorCodes('&', text);
+                        currentName = targetPlayer.getName();
                         sender.sendMessage(targetPlayer.getName() + "님의 Prefix를 설정했습니다.");
-
-                        // 변경: PlayerDataHandler를 통해 playerPrefixes 업데이트
-                        playerDataHandler.getPlayerPrefixes().put(targetPlayer.getName(), prefix);
+                        this.playerPrefixes.put(currentName, text);
                     } else if (prefixOrSuffix.equalsIgnoreCase("suffix")) {
-                        String suffix = ChatColor.translateAlternateColorCodes('&', args[2]);
-                        String currentName = targetPlayer.getName();
-
-                        // Suffix를 플레이어 이름 뒤에 추가
-                        targetPlayer.setPlayerListName(currentName + suffix);
-
+                        text = ChatColor.translateAlternateColorCodes('&', text);
+                        currentName = targetPlayer.getName();
                         sender.sendMessage(targetPlayer.getName() + "님의 Suffix를 설정했습니다.");
-
-                        // 변경: PlayerDataHandler를 통해 playerPrefixes 업데이트
-                        playerDataHandler.getPlayerPrefixes().put(targetPlayer.getName(), suffix);
+                        this.playerSuffixes.put(currentName, text);
                     } else {
                         sender.sendMessage("올바른 prefix 또는 suffix를 지정하세요.");
                     }
                 }
             }
+
             return true;
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(
+            priority = EventPriority.NORMAL
+    )
     public void playerChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
         String globalChatFormat;
-        String staffChatPrefix;
-        if ((Integer) this.map.get(p.getName()) == 1) {
-            String localChatPrefix = this.getConfig().getString("globalLocalChat.localChatPrefix");
+        String noPermission;
+        if ((Integer)this.map.get(p.getName()) == 1) {
+            noPermission = this.getConfig().getString("globalLocalChat.localChatPrefix");
             Boolean permToSeeLocalChat = this.getConfig().getBoolean("globalLocalChat.permToSeeLocalChat");
-            String prefix = playerDataHandler.getPlayerPrefixes().get(p.getName());
+            String prefix = this.playerPrefixes.get(p.getName());
+            String suffix = this.playerSuffixes.get(p.getName());
             String prefixsuffix = "";
-            String localChatFormat;
-            if (prefix != null) {
-                prefixsuffix = ChatColor.translateAlternateColorCodes('&', prefix);
+            String suffixprefix = "";
+
+            if (prefix != null && !prefix.isEmpty()) {
+                prefixsuffix += ChatColor.translateAlternateColorCodes('&', prefix);
             }
+            if (suffix != null && !suffix.isEmpty()) {
+                suffixprefix += ChatColor.translateAlternateColorCodes('&', suffix);
+            }
+
             int radius = this.getConfig().getInt("globalLocalChat.localChatRadius");
             String spyLocalFormat = this.getConfig().getString("globalLocalChat.spyLocalPrefix");
-            boolean noPlayersInRange;
             String localChatSpyFormat = String.format(ChatColor.translateAlternateColorCodes('&', spyLocalFormat) + e.getFormat(), p.getDisplayName(), e.getMessage());
-            if (prefixsuffix.isEmpty()) {
-                localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + "<%s> %s", p.getDisplayName(), e.getMessage());
+            String localChatFormat;
+            if (prefixsuffix.isEmpty() && suffixprefix.isEmpty()) {
+                localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', noPermission) + "<%s> %s", p.getDisplayName(), e.getMessage());
             } else {
-                localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', localChatPrefix) + ChatColor.GRAY + "[ " + prefixsuffix + ChatColor.GRAY + " ]" + ChatColor.RESET + " <%s> %s", p.getDisplayName(), e.getMessage());
+                localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', noPermission) + ChatColor.GRAY + "[ " + prefixsuffix + ChatColor.GRAY + " ]" + ChatColor.RESET + " <%s>" + ChatColor.GRAY + "[ " + suffixprefix + ChatColor.GRAY + " ] " + ChatColor.RESET + "%s", p.getDisplayName(), e.getMessage());
             }
+
             Iterator var9 = Bukkit.getOnlinePlayers().iterator();
             if (p.hasPermission("globallocalchat.local")) {
                 p.sendMessage(localChatFormat);
+                Iterator var15 = e.getRecipients().iterator();
 
-                for (Player recipient : e.getRecipients()) {
-                    if (recipient != p && recipient.getWorld().equals(p.getWorld()) && recipient.getLocation().distance(p.getLocation()) <= radius) {
+                while(var15.hasNext()) {
+                    Player recipient = (Player)var15.next();
+                    if (recipient != p && recipient.getWorld().equals(p.getWorld()) && recipient.getLocation().distance(p.getLocation()) <= (double)radius) {
                         double distance = recipient.getLocation().distance(p.getLocation());
                         String formattedMessage;
                         if (prefixsuffix.isEmpty()) {
                             formattedMessage = String.format(ChatColor.DARK_GREEN + "[" + Math.round(distance) + "m] " + ChatColor.RESET + "<%s> %s", p.getDisplayName(), e.getMessage());
                         } else {
-                            formattedMessage = String.format(ChatColor.DARK_GREEN + "[" + Math.round(distance) + "m] " + ChatColor.RESET + "<%s> %s", p.getDisplayName(), e.getMessage());
+                            formattedMessage = String.format(ChatColor.GRAY + "[ " + prefixsuffix + ChatColor.GRAY + " ] " + ChatColor.RESET + ChatColor.DARK_GREEN + "[" + Math.round(distance) + "m] " + ChatColor.RESET + " <%s>" + ChatColor.GRAY + "[ " + suffixprefix + ChatColor.GRAY + " ] " + ChatColor.RESET + "%s", p.getDisplayName(), e.getMessage());
                         }
-                        recipient.sendMessage(formattedMessage);
-                        noPlayersInRange = false;
 
+                        recipient.sendMessage(formattedMessage);
+                        boolean noPlayersInRange = false;
                         if (noPlayersInRange) {
                             p.sendMessage(ChatColor.RED + "대화를 전송하지 못했습니다. 반경 " + radius + " 블록 내에 플레이어를 찾을 수 없습니다");
                             p.sendMessage(ChatColor.AQUA + "팁: /chatmode 명령어를 이용해 대화 모드를 전환할 수 있습니다");
@@ -265,25 +269,24 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                     }
                 }
 
-                while (true) {
-                    while (var9.hasNext()) {
-                        Player p2 = (Player) var9.next();
-                        if (p2.getWorld().equals(p.getWorld()) && p2.getLocation().distance(p.getLocation()) <= (double) radius) {
+                while(true) {
+                    while(var9.hasNext()) {
+                        Player p2 = (Player)var9.next();
+                        if (p2.getWorld().equals(p.getWorld()) && p2.getLocation().distance(p.getLocation()) <= (double)radius) {
                             if (permToSeeLocalChat) {
                                 if (p2.hasPermission("globallocalchat.local") && p2 != p) {
                                     p2.sendMessage(localChatFormat);
                                 }
-                            } else {
-                                if (p2 != p) {
-                                    p2.sendMessage(localChatFormat);
-                                }
+                            } else if (p2 != p) {
+                                p2.sendMessage(localChatFormat);
                             }
-                        } else if ((Integer) this.map2.get(p2.getName()) == 1 && p2.getPlayer() != p.getPlayer()) {
+                        } else if ((Integer)this.map2.get(p2.getName()) == 1 && p2.getPlayer() != p.getPlayer()) {
                             e.setFormat(localChatSpyFormat);
                             p2.sendRawMessage(e.getFormat());
                             e.setFormat(localChatFormat);
                         }
                     }
+
                     e.setCancelled(true);
                     break;
                 }
@@ -295,20 +298,20 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                 } else {
                     globalChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', globalChatPrefix) + ChatColor.GRAY + "[ " + prefixsuffix + ChatColor.GRAY + " ]" + ChatColor.RESET + e.getFormat(), p.getDisplayName(), e.getMessage());
                 }
+
                 e.setFormat(globalChatFormat);
             }
         } else {
-            String noPermission;
             String globalChatPrefix;
-            if ((Integer) this.map.get(p.getName()) == 2) {
-                staffChatPrefix = this.getConfig().getString("globalLocalChat.staffChatPrefix");
+            if ((Integer)this.map.get(p.getName()) == 2) {
+                String staffChatPrefix = this.getConfig().getString("globalLocalChat.staffChatPrefix");
                 noPermission = String.format(ChatColor.translateAlternateColorCodes('&', staffChatPrefix) + e.getFormat(), p.getDisplayName(), e.getMessage());
                 if (p.hasPermission("globallocalchat.staff")) {
                     e.setFormat(noPermission);
                     Iterator var13 = Bukkit.getOnlinePlayers().iterator();
 
-                    while (var13.hasNext()) {
-                        Player p2 = (Player) var13.next();
+                    while(var13.hasNext()) {
+                        Player p2 = (Player)var13.next();
                         if (p2.hasPermission("globallocalchat.staff")) {
                             p2.sendRawMessage(e.getFormat());
                         }
@@ -352,6 +355,5 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
             this.map2.put(p.getName(), 1);
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', spyLocalOn));
         }
-
     }
 }
