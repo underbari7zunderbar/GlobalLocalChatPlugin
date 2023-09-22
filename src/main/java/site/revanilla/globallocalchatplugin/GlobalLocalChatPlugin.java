@@ -30,7 +30,8 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
 
     public void onEnable() {
         this.playerDataHandler = new PlayerDataHandler(this);
-        this.playerDataHandler.loadPlayerData();
+        this.playerDataHandler.loadPlayerPrefixes();
+        this.playerDataHandler.loadPlayerSuffixes();
         FileConfiguration config = this.getConfig();
         this.saveDefaultConfig();
         this.getServer().getPluginManager().registerEvents(this, this);
@@ -38,7 +39,8 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
     }
 
     public void onDisable() {
-        this.playerDataHandler.savePlayerData();
+        this.playerDataHandler.savePlayerPrefixes();
+        this.playerDataHandler.savePlayerSuffixes();
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "플러그인 비활성화");
     }
 
@@ -240,8 +242,10 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
             String localChatFormat;
             if (prefixsuffix.isEmpty() && suffixprefix.isEmpty()) {
                 localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', noPermission) + "<%s> %s", p.getDisplayName(), e.getMessage());
+            } else if (suffixprefix.isEmpty()) {
+                localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', noPermission) + ChatColor.GRAY + "[ " + prefixsuffix + ChatColor.GRAY + " ]" + ChatColor.RESET + " <%s> %s", p.getDisplayName(), e.getMessage());
             } else {
-                localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', noPermission) + ChatColor.GRAY + "[ " + prefixsuffix + ChatColor.GRAY + " ]" + ChatColor.RESET + " <%s>" + ChatColor.GRAY + "[ " + suffixprefix + ChatColor.GRAY + " ] " + ChatColor.RESET + "%s", p.getDisplayName(), e.getMessage());
+                localChatFormat = String.format(ChatColor.translateAlternateColorCodes('&', noPermission) + ChatColor.GRAY + "[ " + prefixsuffix + ChatColor.GRAY + " ]" + ChatColor.RESET + " <%s>" + ChatColor.GRAY + " [ " + suffixprefix + ChatColor.GRAY + " ] " + ChatColor.RESET + "%s", p.getDisplayName(), e.getMessage());
             }
 
             Iterator var9 = Bukkit.getOnlinePlayers().iterator();
