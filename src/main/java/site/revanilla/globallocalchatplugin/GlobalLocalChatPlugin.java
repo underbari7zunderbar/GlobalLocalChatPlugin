@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import site.revanilla.globallocalchatplugin.PlayerDataHandler;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,8 +22,10 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
     public static Logger log = Logger.getLogger("Minecraft");
     HashMap<String, Integer> map = new HashMap();
     HashMap<String, Integer> map2 = new HashMap();
-    private HashMap<String, String> playerPrefixes = new HashMap();
-    private HashMap<String, String> playerSuffixes = new HashMap();
+    //private HashMap<String, String> playerPrefixes = new HashMap();
+    //private HashMap<String, String> playerSuffixes = new HashMap();
+    HashMap playerPrefixes = this.PlayerDataHandler.playerPrefixes;
+    HashMap playerSuffixes = this.PlayerDataHandler.playerSuffixes;
     PlayerDataHandler playerDataHandler;
 
     public GlobalLocalChatPlugin() {
