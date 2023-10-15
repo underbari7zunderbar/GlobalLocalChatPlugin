@@ -192,16 +192,14 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                     }
                 } else {
                     String text = args[2];
-                    String currentId;
+                    String currentUUID = targetPlayer.getId();
                     if (prefixOrSuffix.equalsIgnoreCase("prefix")) {
                         text = ChatColor.translateAlternateColorCodes('&', text);
-                        currentUUID = targetPlayer.getId();
-                        sender.sendMessage(currentUUID + "님의" + text + "를 설정했습니다.");
+                        sender.sendMessage(currentUUID + "님의" + PrefixOrSuffix + "를 설정했습니다.");
                         this.playerPrefixes.put(currentUUID, text);
                     } else if (prefixOrSuffix.equalsIgnoreCase("suffix")) {
                         text = ChatColor.translateAlternateColorCodes('&', text);
-                        currentUUID = targetPlayer.getId();
-                        sender.sendMessage(currentUUID + "님의" + text + "를 설정했습니다.");
+                        sender.sendMessage(currentUUID + "님의" + PrefixOrSuffix + "를 설정했습니다.");
                         this.playerSuffixes.put(currentUUID, text);
                     } else {
                         sender.sendMessage("올바른 prefix 또는 suffix를 지정하세요.");

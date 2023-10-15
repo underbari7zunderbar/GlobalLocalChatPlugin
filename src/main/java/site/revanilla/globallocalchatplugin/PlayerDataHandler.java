@@ -28,7 +28,7 @@ public class PlayerDataHandler {
         this.plugin = plugin;
         this.gson = (new GsonBuilder()).setPrettyPrinting().create();
         this.dataFolder = plugin.getDataFolder();
-        this.playerSuffixFile = new File(this.dataFolder, "players.json");
+        this.playerSuffixFile = new File(this.dataFolder, "suffixes.json");
         this.playerPrefixFile = new File(this.dataFolder, "prefixes.json");
         this.playerPrefixes = new HashMap();
         this.playerSuffixes = new HashMap();
