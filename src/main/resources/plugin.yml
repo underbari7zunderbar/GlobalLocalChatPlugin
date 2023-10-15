@@ -2,6 +2,7 @@ name: GlobalLocalChatPlugin
 version: Rolling
 main: site.revanilla.globallocalchatplugin.GlobalLocalChatPlugin
 api-version: '1.20'
+author: _I7Z_
 commands:
   global:
     description: Speak in global chat.
