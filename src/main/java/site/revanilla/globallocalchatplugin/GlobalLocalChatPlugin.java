@@ -39,13 +39,13 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
         FileConfiguration config = this.getConfig();
         this.saveDefaultConfig();
         this.getServer().getPluginManager().registerEvents(this, this);
-        Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "플러그인 활성화");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "GlobalLocalChatPlugin Enabled");
     }
 
     public void onDisable() {
         this.playerDataHandler.savePlayerPrefixes();
         this.playerDataHandler.savePlayerSuffixes();
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "플러그인 비활성화");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "GlobalLocalChatPlugin Disabled");
     }
 
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
@@ -73,7 +73,6 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
 
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermission));
                 } else if (!(sender instanceof Player)) {
-                    log.info("이 명령어는 플레이어만 사용할수있습니다");
                     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "이 명령어는 플레이어만 사용할수있습니다");
                     return false;
                 }
@@ -96,7 +95,6 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
 
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermission));
                 } else if (!(sender instanceof Player)) {
-                    log.info("이 명령어는 플레이어만 사용할수있습니다");
                     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "이 명령어는 플레이어만 사용할수있습니다");
                     return false;
                 }
@@ -119,7 +117,6 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
 
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermission));
                 } else if (!(sender instanceof Player)) {
-                    log.info("이 명령어는 플레이어만 사용할수있습니다");
                     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "이 명령어는 플레이어만 사용할수있습니다");
                     return false;
                 }
@@ -143,7 +140,6 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
 
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermission));
                 } else if (!(sender instanceof Player)) {
-                    log.info("이 명령어는 플레이어만 사용할수있습니다");
                     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "이 명령어는 플레이어만 사용할수있습니다");
                     return false;
                 }
@@ -160,7 +156,6 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
 
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermission));
                 } else if (!(sender instanceof Player)) {
-                    log.info("이 명령어는 플레이어만 사용할수있습니다");
                     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "이 명령어는 플레이어만 사용할수있습니다");
                     return false;
                 }
@@ -200,15 +195,13 @@ public final class GlobalLocalChatPlugin extends JavaPlugin implements Listener 
                     String currentId;
                     if (prefixOrSuffix.equalsIgnoreCase("prefix")) {
                         text = ChatColor.translateAlternateColorCodes('&', text);
-                        currentId = targetPlayer.getId();
                         currentUUID = targetPlayer.getId();
-                        sender.sendMessage(currentId + "님의" + text + "를 설정했습니다.");
+                        sender.sendMessage(currentUUID + "님의" + text + "를 설정했습니다.");
                         this.playerPrefixes.put(currentUUID, text);
                     } else if (prefixOrSuffix.equalsIgnoreCase("suffix")) {
                         text = ChatColor.translateAlternateColorCodes('&', text);
-                        currentId = targetPlayer.getId();
                         currentUUID = targetPlayer.getId();
-                        sender.sendMessage(currentId + "님의" + text + "를 설정했습니다.");
+                        sender.sendMessage(currentUUID + "님의" + text + "를 설정했습니다.");
                         this.playerSuffixes.put(currentUUID, text);
                     } else {
                         sender.sendMessage("올바른 prefix 또는 suffix를 지정하세요.");
